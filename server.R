@@ -7,16 +7,16 @@ x <- 1:21*5 + 15
 #Calculates the weight you would have for a BMI value of 18.5, 25 and 30
 #This is to determine what the limits are
 calclimits <- function(height) {
-  x <- numeric(3)
-  x[1] <- 18.5 * (height/100)^2 #<18.5 = underweight
-  x[2] <- 25 * (height/100)^2   #18.5 - 25 = normal weight
-  x[3] <- 30 * (height/100)^2   #25 - 30 = overweight | >30 = obese
-  x
+  i <- numeric(3)
+  i[1] <- 18.5 * (height/100)^2 #<18.5 = underweight
+  i[2] <- 25 * (height/100)^2   #18.5 - 25 = normal weight
+  i[3] <- 30 * (height/100)^2   #25 - 30 = overweight | >30 = obese
+  i
 }
 
 #This function makes a plot with the weight as x and BMI as y. This way you can see
 #what weight you are "supposed" to have
-plotbmi <- function(height, weight, limits) {
+plotbmi <- function(height, weight, limits, x) {
   y <- calcbmi(height, x)
   plottitle <- paste("The BMI for a height of", as.character(height), "cm, for a given weight")
   plot(x, y, 
@@ -56,7 +56,7 @@ shinyServer(
     #Calculates the weights corresponding to the BMI limits for the give height
     limits <- reactive({calclimits(input$height)})
     #Create the BMI plot for the given height and weight
-    output$bmiplot <- renderPlot({plotbmi(input$height, input$weight, limits())})
+    output$bmiplot <- renderPlot({plotbmi(input$height, input$weight, limits(), x)})
     #Show the category you fall in to with this height and weight
     class <- reactive({determine.class(input$weight, limits())})
     output$yourclass <- renderText({paste0("With this height and weight, you are ", class(), ".")})
